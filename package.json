@@ -1,0 +1,18 @@
+{
+  "name": "stock",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jhoughton@virginia.edu",
+  "license": "ISC",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.8",
+    "marked": "^0.5.2",
+    "node-iex": "0.0.3",
+    "request": "^2.88.0"
+  }
+}
