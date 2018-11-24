@@ -14,9 +14,10 @@ var fetch = function(ticker) {
 
 var parse = function(data) {
     return {
+        name:     data.companyName,
         high:     data.high,
         low:      data.low,
-        changeP:  data.changePercent,
+        changeP:  data.changePercent * 100,
         open:     data.open,
         close:    data.close,
         current:  data.latestPrice

@@ -1,17 +1,21 @@
-var iex = require('./drivers/iex');
+var iex    = require('./drivers/iex'),
+    colors = require('colors/safe');
+
+var UNKNOWN = '???';
 
 var stock = function(ticker) {
     this.history = {
         title: ticker,
-        x: 0,
-        y: 0
+        x: [0],
+        y: [0]
     };
     this.ticker = ticker;
     this.data = {
-        current: '???',
-        open:    '???',
-        close:   '???',
-        changeP: '???'
+        name:    '',
+        current: UNKNOWN,
+        open:    UNKNOWN,
+        close:   UNKNOWN,
+        changeP: UNKNOWN
     };
     this.selected = false;
 };
@@ -47,29 +51,35 @@ var gen = function(tickers) {
     return tickers.map((ticker) => new stock(ticker));
 };
 
-var colors = global.theme.chart.colors;
+var table_colors = global.theme.chart.colors;
 
 var blessed = {
     line: function(stocks) {
         return stocks.map((st, i) => {
             var h = st.history;
             h.style = {
-                line: colors[i % colors.length],
-                text: colors[i % colors.length]
+                line: table_colors[i % table_colors.length],
+                text: table_colors[i % table_colors.length]
             };
             return h;
         });
     },
     table: function(stocks) {
-        headers = ['', 'Ticker', 'Current', 'Open', 'Close', 'Change %'];
+        headers = ['', 'Ticker', 'Current', 'Open', 'Close', 'Change%', 'Name'];
         data = stocks.map((_stock) => {
+            var c = +_stock.data.changeP < 0 ? colors.red : colors.green;
+            if(_stock.data.changeP == UNKNOWN) {
+                c = colors.white;
+            }
+
             return [
                 _stock.selected ? '*' : ' ',
-                _stock.ticker,
-                _stock.data.current,
-                _stock.data.open,
-                _stock.data.close,
-                _stock.data.changeP,
+                c(_stock.ticker),
+                c(_stock.data.current),
+                c(_stock.data.open),
+                c(_stock.data.close),
+                c(_stock.data.changeP),
+                c(_stock.data.name)
             ];
         });
         return {

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+var tickers = ['AAPL', 'GOOG', 'TSLA'];
+
 var theme_name = 'default';
 var theme   = require('./themes/' + theme_name);
 global.theme = theme;
@@ -20,7 +22,9 @@ var grid = new contrib.grid({
 var line = grid.set(0, 0, 8, 12, contrib.line, {
     showNthLabel: 5,
     label: ' History ',
-    showLegend: true
+    showLegend: true,
+    style: theme.chart,
+    xLabelPadding: 5
 });
 
 var table = grid.set(8, 0, 4, 12, contrib.table, {
@@ -28,7 +32,7 @@ var table = grid.set(8, 0, 4, 12, contrib.table, {
     fg: theme.table.foreground,
     label: ' Stocks ',
     columnSpacing: 1,
-    columnWidth: [2, 10, 10, 10, 10, 10]
+    columnWidth: [2, 10, 10, 10, 10, 10, 15]
 });
 
 table.focus();
@@ -44,7 +48,6 @@ screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
 });
 
-var tickers = ['AAPL', 'GOOG', 'TSLA'];
 var stocks = st.gen(tickers);
 
 table.rows.on('select', (item, index) => {
@@ -66,6 +69,10 @@ setInterval(function() {
             style: {color: 'yellow'}
         }]);
     } else {
+        var mins = lines.map(line => Math.min.apply(null, line.history.y.filter(y => {
+            return isFinite(y);
+        })));
+        line.options.minY = Math.min.apply(null, mins);
         line.setData(st.blessed.line(lines));
     }
 
