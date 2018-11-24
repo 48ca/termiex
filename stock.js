@@ -38,10 +38,10 @@ stock.prototype.update = function() {
     });
 };
 
-stock.prototype.updateHistory = function() {
+stock.prototype.updateHistory = function(duration) {
     var that = this;
-    iex.history.fetch(this.ticker, '1y').then(function(data) {
-        var d = iex.history.parse(data);
+    iex.history.fetch(this.ticker, duration).then(function(data) {
+        var d = iex.history.parse(data, duration);
         that.history.x = d.x;
         that.history.y = d.y;
     });

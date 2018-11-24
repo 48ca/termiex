@@ -28,8 +28,11 @@ var history = {
     fetch: function(ticker, type) {
         return iex.http.stock(ticker).chart(type);
     },
-    parse: function(data) {
-        var x = data.map(el => el.date);
+    parse: function(data, type) {
+        var x = type == '1d'
+            ? data.map(el => el.minute)
+            : data.map(el => el.date);
+
         var y = data.map(el => el.close);
         return { x:x, y:y };
     }
