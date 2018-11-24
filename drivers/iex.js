@@ -17,7 +17,7 @@ var parse = function(data) {
         name:     data.companyName,
         high:     data.high,
         low:      data.low,
-        changeP:  data.changePercent * 100,
+        changeP:  Math.round(data.changePercent * 10000)/100,
         open:     data.open,
         close:    data.close,
         current:  data.latestPrice
